@@ -126,11 +126,11 @@ class TgHandler:
 
 class TgClient(TgHandler):
     async def Ask_user(self):
-        userr = TgClient.user_(self)
+        userr = self.user_()
         msg1 = await self.bot.send_message(
             self.m.chat.id,
             text=Msg.TXT_MSG.format(
-                user=TgClient.user_(self)
+                user=self.user_()
             )
         )
         inputFile = await self.bot.listen(self.m.chat.id)
@@ -139,14 +139,11 @@ class TgClient(TgHandler):
                 return
             else:
                 txt_name = inputFile.document.file_name.replace("_", " ")
-                x = await TgClient.downloadMedia(
-                    self,
-                    inputFile
-                )
+                x = await self.downloadMedia(inputFile)
                 await inputFile.delete(True)
 
             if inputFile.document.mime_type == "text/plain":
-                nameLinks = await TgClient.readTxt(self, x)
+                nameLinks = await self.readTxt(x)
                 try:
                     Token = inputFile.caption
                 except:
@@ -164,7 +161,7 @@ class TgClient(TgHandler):
             )
             user_index = await self.bot.listen(self.m.chat.id)
             index = int(user_index.text)
-            num = TgClient.index_(index=index)
+            num = self.index_(index=index)
 
             msg3 = await self.bot.send_message(
                 self.m.chat.id,
@@ -180,7 +177,7 @@ class TgClient(TgHandler):
             )
             user_quality = await self.bot.listen(self.m.chat.id)
             resolution = user_quality.text
-            quality = TgClient.resolution_(resolution=resolution)
+            quality = self.resolution_(resolution=resolution)
 
             return nameLinks, num, caption, quality, Token, txt_name, userr
         else:
@@ -194,7 +191,7 @@ class TgClient(TgHandler):
         if t.text:
             thumb = t.text
         elif t.photo:
-            thumb = await TgClient.downloadMedia(self, t)
+            thumb = await self.downloadMedia(t)
         else:
-            thumb == "no"
+            thumb = "no"
         return thumb
