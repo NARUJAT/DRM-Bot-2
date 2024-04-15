@@ -44,14 +44,8 @@ async def Pro(bot: AFK, m: Message):
     try:
         nameLinks, num, caption, quality, Token, txt_name, userr = await BOT.Ask_user()
         Thumb = await BOT.thumb()
-    except Exception as e:
-        LOGS.error(str(e))
-        await TgHandler.error_message(bot=bot, m=m, error=f"from User Input - {e}")
-        await m.reply_text("Wrong Input")
-        return
 
-    for i in range(num, len(nameLinks)):
-        try:
+        for i in range(num, len(nameLinks)):
             name = BOT.parse_name(nameLinks[i][0])
             link = nameLinks[i][1]
             wxh = get_link_atributes().get_height_width(link=link, Q=quality)
@@ -96,23 +90,10 @@ async def Pro(bot: AFK, m: Message):
                         file_link=url,
                     )
                 )
-        except Exception as r:
-            LOGS.error(str(r))
-            error_list.append(f"{caption_name}\n")
-            try:
-                await Show.delete(True)
-            except:
-                pass
-            await bot.send_message(
-                chat_id=Config.LOG_CH,
-                text=Msg.ERROR_MSG.format(
-                    error=str(r),
-                    no_of_files=len(error_list),
-                    file_name=caption_name,
-                    file_link=url,
-                )
-            )
-            continue
+    except Exception as e:
+        LOGS.error(str(e))
+        await TgHandler.error_message(bot=bot, m=m, error=f"from User Input - {e}")
+        await m.reply_text("Error: Wrong Input")
 
     shutil.rmtree(sPath, ignore_errors=True)
     try:
@@ -122,9 +103,6 @@ async def Pro(bot: AFK, m: Message):
     except Exception as e1:
         LOGS.error(str(e1))
         shutil.rmtree(tPath, ignore_errors=True)
-        pass
 
     await BOT.linkMsg2(error_list)
     await m.reply_text("Done")
-
-
